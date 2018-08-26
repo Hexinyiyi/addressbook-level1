@@ -10,6 +10,7 @@ package seedu.addressbook;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -475,9 +476,13 @@ public class AddressBook {
      */
     private static ArrayList<HashMap<PersonProperty, String>> getPersonsWithNameContainingAnyKeyword(Collection<String> keywords) {
         final ArrayList<HashMap<PersonProperty, String>> matchedPersons = new ArrayList<>();
+        final ArrayList<String> keywordsLowerCase = new ArrayList<>(convertToLowerCase(keywords));
+
         for (HashMap<PersonProperty, String> person : getAllPersonsInAddressBook()) {
             final Set<String> wordsInName = new HashSet<>(splitByWhitespace(getNameFromPerson(person)));
-            if (!Collections.disjoint(wordsInName, keywords)) {
+            final ArrayList<String> wordsInNameLowerCase = new ArrayList<>(convertToLowerCase(wordsInName));
+
+            if (!Collections.disjoint(wordsInNameLowerCase, keywordsLowerCase)) {
                 matchedPersons.add(person);
             }
         }
@@ -1148,6 +1153,20 @@ public class AddressBook {
      */
     private static ArrayList<String> splitByWhitespace(String toSplit) {
         return new ArrayList<>(Arrays.asList(toSplit.trim().split("\\s+")));
+    }
+
+    /**
+     * Convert all strings in a collection to their lower case
+     *
+     * @param collection source collection of strings
+     * @return ArrayList of strings
+     */
+    private static ArrayList<String> convertToLowerCase(Collection<String> collection) {
+        final ArrayList<String> collectionLowerCase = new ArrayList<>();
+        for (String string : collection) {
+            collectionLowerCase.add(string.toLowerCase());
+        }
+        return collectionLowerCase;
     }
 
 }
